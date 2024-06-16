@@ -27,6 +27,7 @@ public class InitEventLogic
      * Thread-safe.
      * @param listenerInfo ListenerInfo to assign a state to.
      * @param success True: Port has opened. False: Port failed to open.
+     * @return the event according to the passed information.
      */
     public static ProxyInitializeEvent setListenerAsInitialized(ListenerInfo listenerInfo, boolean success)
     {
@@ -41,7 +42,8 @@ public class InitEventLogic
 
         knownListenersState.put( listenerInfo, success );
 
-        if(areAllListenersInitialized()) {
+        if ( areAllListenersInitialized( ) )
+        {
             result = generateEvent();
         }
 

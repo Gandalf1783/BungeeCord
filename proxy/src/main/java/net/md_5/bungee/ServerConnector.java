@@ -130,7 +130,7 @@ public class ServerConnector extends PacketHandler
         channel.write( copiedHandshake );
 
         channel.setProtocol( Protocol.LOGIN );
-        channel.write( new LoginRequest( user.getName(), null, user.getUniqueId() ) );
+        channel.write( new LoginRequest( user.getName(), null, user.getRewriteId() ) );
     }
 
     @Override
@@ -243,7 +243,7 @@ public class ServerConnector extends PacketHandler
             user.getForgeClientHandler().setHandshakeComplete();
         }
 
-        if ( user.getServer() == null || !( login.getDimension() instanceof Integer ) )
+        if ( user.getServer() == null || user.getPendingConnection().getVersion() >= ProtocolConstants.MINECRAFT_1_16 )
         {
             // Once again, first connection
             user.setClientEntityId( login.getEntityId() );
@@ -365,7 +365,7 @@ public class ServerConnector extends PacketHandler
             } else
             {
                 LoginResult loginProfile = user.getPendingConnection().getLoginProfile();
-                user.unsafe().sendPacket( new LoginSuccess( user.getUniqueId(), user.getName(), ( loginProfile == null ) ? null : loginProfile.getProperties() ) );
+                user.unsafe().sendPacket( new LoginSuccess( user.getRewriteId(), user.getName(), ( loginProfile == null ) ? null : loginProfile.getProperties() ) );
                 user.getCh().setEncodeProtocol( Protocol.CONFIGURATION );
             }
         }
